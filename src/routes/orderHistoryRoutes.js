@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const orderController = require('../controllers/orderController');
+const authController = require('../controllers/authController');
 
-router.get("/", orderController.getAll);
+router.get("/", authController.checkToken, orderController.getAll);
 
 module.exports = router;
