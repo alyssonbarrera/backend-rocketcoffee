@@ -14,6 +14,9 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderHistoryRoutes = require('./routes/orderHistoryRoutes');
 
+app.use('/', (req, res) => {
+    res.send('Hello World!');
+})
 app.use('/auth', userRoutes)
 app.use('/products', productRoutes);
 app.use('/orders', orderHistoryRoutes);
