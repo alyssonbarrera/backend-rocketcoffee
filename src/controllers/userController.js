@@ -22,8 +22,6 @@ const createUser = async (req, res) => {
     req.body.password = hashedPassword;
     
     try {
-        console.log(req.body)
-        console.log(req.file)
         const image = await cloudinary.uploader.upload(req.file.path);
         const imageURL = image.url;
 
