@@ -9,6 +9,16 @@ const getAll = async (req, res) => {
     }
 }
 
+const deleteAll = async (req, res) => {
+    try {
+        const orders = await orderSchema.deleteMany();
+        res.status(200).send(orders);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 module.exports = {
-    getAll
+    getAll,
+    deleteAll
 }

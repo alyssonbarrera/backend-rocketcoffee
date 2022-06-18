@@ -17,6 +17,7 @@ const createProduct = async (req, res) => {
 
         const newProduct = new productSchema({
             productImage: imageURL,
+            productImageId: image.public_id,
             productName: req.body.productName,
             productDescription: req.body.productDescription,
             productQuantity: req.body.productQuantity
@@ -26,7 +27,8 @@ const createProduct = async (req, res) => {
 
         res.status(200).send({
             message: "Produto criado com sucesso!",
-            savedProduct
+            savedProduct,
+            image
         });
 
     } catch (error) {
@@ -37,7 +39,7 @@ const createProduct = async (req, res) => {
     }
 }
 
-const updateProduct = async (req, res) => {
+const updateProductClient = async (req, res) => {
     try {
 
         const productFound = await productSchema.findByIdAndUpdate(req.params.id, {$inc: {productQuantity: -req.body.productQuantity}});
@@ -68,7 +70,36 @@ const updateProduct = async (req, res) => {
         await newOrder.save();
 
         res.status(200).send({
-            message: `Produto ${productFound.productName} atualizado com sucesso!`
+            message: `Produto ${productFound.productName} atualizado com sucesso!`,
+            currentQuantity: productFound.productQuantity - req.body.productQuantity
+        })
+        
+    } catch (error) {
+        res.status(500).send({
+            message: "Erro ao atualizar produto",
+            error
+        });
+    }
+}
+const updateProduct = async (req, res) => {
+    try {
+
+        const image = await cloudinary.uploader.upload(req.file.path);
+        const imageURL = image.url;
+
+        const productFound = await productSchema.findByIdAndUpdate(req.params.id, {
+            productImage: imageURL,
+            productImageId: image.public_id,
+            productName: req.body.productName,
+            productDescription: req.body.productDescription,
+            productQuantity: req.body.productQuantity
+        });
+
+        await cloudinary.uploader.destroy(productFound.productImageId);
+
+        res.status(200).send({
+            message: `Produto ${productFound.productName} atualizado com sucesso!`,
+            productFound
         })
         
     } catch (error) {
@@ -99,5 +130,6 @@ module.exports = {
     getAll,
     createProduct,
     updateProduct,
+    updateProductClient,
     productDelete
 }

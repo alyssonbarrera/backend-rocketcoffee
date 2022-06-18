@@ -7,7 +7,8 @@ const authController = require('../controllers/authController');
 
 router.get('/', productController.getAll);
 router.post('/', authController.checkToken, upload.single("image"), productController.createProduct);
-router.put('/:id', productController.updateProduct);
+router.put('/:id', authController.checkToken, upload.single("image"), productController.updateProduct);
+router.patch('/:id', productController.updateProductClient);
 router.delete('/', authController.checkToken, productController.productDelete);
 
 module.exports = router
