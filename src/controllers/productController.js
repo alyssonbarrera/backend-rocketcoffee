@@ -49,6 +49,7 @@ const updateProductClient = async (req, res) => {
             productName: productFound.productName,
             productDescription: productFound.productDescription,
             productQuantity: req.body.productQuantity,
+            createdAt: new Date()
         })
 
         await newOrder.save();
