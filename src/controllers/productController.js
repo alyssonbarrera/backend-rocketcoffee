@@ -44,27 +44,11 @@ const updateProductClient = async (req, res) => {
 
         const productFound = await productSchema.findByIdAndUpdate(req.params.id, {$inc: {productQuantity: -req.body.productQuantity}});
 
-        const newDate = new Date();
-
-        const formatedDate = newDate.toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric"
-        });
-        const formatedHour = newDate.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        })
-
-        const createdAtFormated = `${formatedDate} - ${formatedHour}`;
-
         const newOrder = new orderSchema({
             productImage: productFound.productImage,
             productName: productFound.productName,
             productDescription: productFound.productDescription,
             productQuantity: req.body.productQuantity,
-            createdAt: createdAtFormated
         })
 
         await newOrder.save();
