@@ -84,22 +84,31 @@ const updateProductClient = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
 
-        const image = await cloudinary.uploader.upload(req.file.path);
-        const imageURL = image.url;
+        if(req.file) {
+            const image = await cloudinary.uploader.upload(req.file.path);
+            const imageURL = image.url;
 
-        const productFound = await productSchema.findByIdAndUpdate(req.params.id, {
-            productImage: imageURL,
-            productImageId: image.public_id,
-            productName: req.body.productName,
-            productDescription: req.body.productDescription,
-            productQuantity: req.body.productQuantity
-        });
+            await productSchema.findByIdAndUpdate(req.params.id, {
+                productImage: imageURL,
+                productImageId: image.public_id,
+                productName: req.body.productName,
+                productDescription: req.body.productDescription,
+                productQuantity: req.body.productQuantity
+            });
 
-        await cloudinary.uploader.destroy(productFound.productImageId);
+            await cloudinary.uploader.destroy(productFound.productImageId);
+        }
+        else {
+            await productSchema.findByIdAndUpdate(req.params.id, {
+                productName: req.body.productName,
+                productDescription: req.body.productDescription,
+                productQuantity: req.body.productQuantity
+            });
+        }
+
 
         res.status(200).send({
-            message: `Produto ${productFound.productName} atualizado com sucesso!`,
-            productFound
+            message: `Produto atualizado com sucesso!`,
         })
         
     } catch (error) {
