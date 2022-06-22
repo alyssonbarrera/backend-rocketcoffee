@@ -19,8 +19,8 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     createdAt: {
-        type: new Date(),
-        default: Date.now
+        type: Date,
+        default: new Date()
     }
 });
 
